@@ -1,0 +1,4 @@
+# Example configuration file
+# Copy this to config.yml and update with your values
+
+agentcohort_store: ".agentcohort"
