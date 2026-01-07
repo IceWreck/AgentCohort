@@ -148,15 +148,15 @@ class LinkService:
     def link_tasks(self, task_ids: list[str]) -> int:
         if len(task_ids) < 2:
             raise ValueError("at least 2 tasks required for linking")
-        tasks = {
-            self.repository.find_by_partial_id(tid).id: self.repository.find_by_partial_id(tid)
-            for tid in task_ids
-        }
-        resolved_ids = list(tasks.keys())
+        tasks: dict[str, Task] = {}
+        for tid in task_ids:
+            task = self.repository.find_by_partial_id(tid)
+            tasks[task.id] = task
+        resolved_ids: list[str] = list(tasks.keys())
         added_count = 0
         for task_id in resolved_ids:
             task = tasks[task_id]
-            other_ids = [oid for oid in resolved_ids if oid != task_id]
+            other_ids: list[str] = [oid for oid in resolved_ids if oid != task_id]
             for other_id in other_ids:
                 if other_id not in task.links:
                     task.links.append(other_id)
