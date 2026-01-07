@@ -11,7 +11,7 @@ from agentcohort.task.models import TaskStatus, TaskType
 from agentcohort.task.repository import MarkdownTaskRepository
 from agentcohort.task.services import DependencyService, LinkService, QueryService, TaskService
 
-task_app = typer.Typer()
+task_app = typer.Typer(no_args_is_help=True)
 
 
 def get_services():
