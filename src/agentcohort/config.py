@@ -13,6 +13,7 @@ class Config(BaseSettings):
     model_config = SettingsConfigDict(env_prefix="AGENTCOHORT_")
 
     agentcohort_store: Path = Field(default=Path(".agentcohort"))
+    tasks_dir: Path = Field(default=Path(".agentcohort/tasks"))
 
     @classmethod
     def from_yaml(cls, file_path: Path) -> "Config":
