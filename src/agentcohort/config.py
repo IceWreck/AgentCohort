@@ -2,7 +2,7 @@ import json
 from pathlib import Path
 
 from pydantic import Field
-from pydantic_settings import BaseSettings, SettingsConfigDict, YamlConfigSettingsSource
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 from agentcohort.logger import get_logger
 
@@ -16,14 +16,9 @@ class Config(BaseSettings):
     tasks_dir: Path = Field(default=Path(".agentcohort/tasks"))
 
     @classmethod
-    def from_yaml(cls, file_path: Path) -> "Config":
-        logger.info(f"loading config file: {file_path}")
-        if not file_path.exists():
-            logger.error(f"config file not found: {file_path}")
-            raise FileNotFoundError(f"config file not found: {file_path}")
-
-        yaml_source = YamlConfigSettingsSource(cls, yaml_file=str(file_path))
-        return cls(**yaml_source())
+    def from_env(cls) -> "Config":
+        logger.info("loading config from environment")
+        return cls()
 
     def to_json(self) -> str:
         return json.dumps(self.model_dump(mode="json"), indent=4)

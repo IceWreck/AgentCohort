@@ -17,8 +17,7 @@ task_app.add_typer(dep_app, name="dep", help="dependency management")
 
 
 def get_services():
-    config_path = Path("config/config.yml")
-    config = Config.from_yaml(config_path) if config_path.exists() else Config()
+    config = Config.from_env()
     repo = MarkdownTaskRepository(config.tasks_dir)
     id_gen = TaskIdGenerator(Path.cwd())
     task_service = TaskService(repo, id_gen)
