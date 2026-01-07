@@ -1,5 +1,4 @@
-from agentcohort import task
-from agentcohort.main import app, main
-from agentcohort.task_cli import task_app
+from agentcohort.cli.main import app, main
+from agentcohort.cli.task import task_app
 
-__all__ = ["app", "main", "task", "task_app"]
+__all__ = ["app", "main", "task_app"]
