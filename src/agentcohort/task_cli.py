@@ -228,7 +228,7 @@ def add_note(task_id: str, note_text: str | None = typer.Argument(None)) -> None
 def query(jq_filter: str = typer.Argument(None)) -> None:
     _, _, _, query_service, _ = get_services()
     tasks = query_service.query_filtered()
-    typer.echo(json.dumps(tasks, indent=2))
+    typer.echo(json.dumps([task.model_dump(mode="json") for task in tasks], indent=2))
 
 
 @dep_app.command()

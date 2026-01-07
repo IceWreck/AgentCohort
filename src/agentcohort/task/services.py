@@ -171,14 +171,8 @@ class QueryService:
     def __init__(self, repository: TaskRepository) -> None:
         self.repository = repository
 
-    def query_all(self) -> list[dict[str, object]]:
-        tasks = self.repository.list_all()
-        return [self._task_to_dict(task) for task in tasks]
+    def query_all(self) -> list[Task]:
+        return self.repository.list_all()
 
-    def query_filtered(self) -> list[dict[str, object]]:
+    def query_filtered(self) -> list[Task]:
         return self.query_all()
-
-    def _task_to_dict(self, task: Task) -> dict[str, object]:
-        task_dict = task.model_dump(mode="json")
-        task_dict["notes"] = [{"timestamp": n.timestamp, "content": n.content} for n in task.notes]
-        return task_dict
