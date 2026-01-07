@@ -143,6 +143,23 @@ class MarkdownTaskRepository(TaskRepository):
         file_path = self._get_file_path(task_id)
         if not file_path.exists():
             raise TaskNotFoundError(f"task '{task_id}' not found")
+
+        all_tasks = {task.id: task for task in self.list_all()}
+
+        for task in all_tasks.values():
+            updated = False
+            if task_id in task.deps:
+                task.deps = [dep for dep in task.deps if dep != task_id]
+                updated = True
+            if task_id in task.links:
+                task.links = [link for link in task.links if link != task_id]
+                updated = True
+            if task.parent == task_id:
+                task.parent = None
+                updated = True
+            if updated:
+                MarkdownParser.write(self._get_file_path(task.id), task)
+
         file_path.unlink()
 
     def get_all_ids(self) -> list[str]:
