@@ -99,9 +99,8 @@ class MarkdownTaskRepository(TaskRepository):
                 result.append(task)
                 continue
             all_closed = all(
-                all_tasks[dep_id].status == TaskStatus.CLOSED
+                dep_id in all_tasks and all_tasks[dep_id].status == TaskStatus.CLOSED
                 for dep_id in task.deps
-                if dep_id in all_tasks
             )
             if all_closed:
                 result.append(task)
@@ -116,9 +115,8 @@ class MarkdownTaskRepository(TaskRepository):
             if not task.deps:
                 continue
             has_unclosed = any(
-                all_tasks[dep_id].status != TaskStatus.CLOSED
+                dep_id not in all_tasks or all_tasks[dep_id].status != TaskStatus.CLOSED
                 for dep_id in task.deps
-                if dep_id in all_tasks
             )
             if has_unclosed:
                 result.append(task)

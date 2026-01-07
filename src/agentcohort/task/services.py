@@ -99,19 +99,22 @@ class DependencyService:
 
     def add_dependency(self, task_id: str, dep_id: str) -> Task:
         task = self.repository.find_by_partial_id(task_id)
-        self.repository.find_by_partial_id(dep_id)
-        if dep_id in task.deps:
+        dep_task = self.repository.find_by_partial_id(dep_id)
+        resolved_dep_id = dep_task.id
+        if resolved_dep_id in task.deps:
             return task
-        if self._detect_cycle(dep_id, task_id):
+        if self._detect_cycle(resolved_dep_id, task.id):
             raise CircularDependencyError(f"adding dependency would create cycle: {task_id} -> {dep_id}")
-        task.deps.append(dep_id)
+        task.deps.append(resolved_dep_id)
         return self.repository.update(task)
 
     def remove_dependency(self, task_id: str, dep_id: str) -> Task:
         task = self.repository.find_by_partial_id(task_id)
-        if dep_id not in task.deps:
+        dep_task = self.repository.find_by_partial_id(dep_id)
+        resolved_dep_id = dep_task.id
+        if resolved_dep_id not in task.deps:
             return task
-        task.deps = [d for d in task.deps if d != dep_id]
+        task.deps = [d for d in task.deps if d != resolved_dep_id]
         return self.repository.update(task)
 
     def get_dependency_tree(self, root_id: str, full_mode: bool = False) -> str:
@@ -145,8 +148,11 @@ class LinkService:
     def link_tasks(self, task_ids: list[str]) -> int:
         if len(task_ids) < 2:
             raise ValueError("at least 2 tasks required for linking")
-        resolved_ids = [self.repository.find_by_partial_id(tid).id for tid in task_ids]
-        tasks = {tid: self.repository.get(tid) for tid in resolved_ids}
+        tasks = {
+            self.repository.find_by_partial_id(tid).id: self.repository.find_by_partial_id(tid)
+            for tid in task_ids
+        }
+        resolved_ids = list(tasks.keys())
         added_count = 0
         for task_id in resolved_ids:
             task = tasks[task_id]

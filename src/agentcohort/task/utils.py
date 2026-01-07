@@ -79,6 +79,9 @@ class MarkdownParser:
         content = data.content
         title = MarkdownParser._extract_title(content)
         notes = data.notes
+        description = MarkdownParser._extract_section(content, "Description", title_line=True)
+        design = MarkdownParser._extract_section(content, "Design")
+        acceptance = MarkdownParser._extract_section(content, "Acceptance Criteria")
         frontmatter = data.frontmatter
         return Task(
             id=frontmatter.id,
@@ -92,9 +95,9 @@ class MarkdownParser:
             assignee=frontmatter.assignee,
             external_ref=frontmatter.external_ref,
             parent=frontmatter.parent,
-            description=frontmatter.description,
-            design=frontmatter.design,
-            acceptance=frontmatter.acceptance,
+            description=description,
+            design=design,
+            acceptance=acceptance,
             notes=notes,
         )
 
@@ -111,6 +114,18 @@ class MarkdownParser:
             note_content = match.group(2).strip()
             notes.append(Note(timestamp=timestamp, content=note_content))
         return notes
+
+    @staticmethod
+    def _extract_section(content: str, section_name: str, title_line: bool = False) -> str | None:
+        pattern = rf"## {section_name}\s*\n(.*?)(?=\n## |\Z)"
+        section_match = re.search(pattern, content, re.DOTALL)
+        if not section_match:
+            return None
+        section_content = section_match.group(1).strip()
+        if title_line:
+            lines = section_content.split("\n", 1)
+            return lines[1].strip() if len(lines) > 1 else None
+        return section_content if section_content else None
 
     @staticmethod
     def _extract_title(content: str) -> str:

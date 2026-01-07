@@ -34,9 +34,6 @@ class TaskBase(BaseModel):
     assignee: str | None = None
     external_ref: str | None = None
     parent: str | None = None
-    description: str | None = None
-    design: str | None = None
-    acceptance: str | None = None
 
     @field_validator("created", mode="before")
     @classmethod
@@ -52,4 +49,7 @@ class TaskFrontmatter(TaskBase):
 
 class Task(TaskBase):
     title: str
+    description: str | None = None
+    design: str | None = None
+    acceptance: str | None = None
     notes: list[Note] = Field(default_factory=list)

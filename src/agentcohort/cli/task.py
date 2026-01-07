@@ -185,7 +185,7 @@ def show(task_id: str) -> None:
             typer.echo(f"- {blocker.id} [{blocker.status.value}] {blocker.title}")
         typer.echo("")
 
-    blocking = [t.id for t in all_tasks.values() if task_id in t.deps and t.status != TaskStatus.CLOSED]
+    blocking = [t.id for t in all_tasks.values() if task.id in t.deps and t.status != TaskStatus.CLOSED]
     if blocking:
         typer.echo("## Blocking")
         typer.echo("")
