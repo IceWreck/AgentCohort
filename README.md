@@ -2,6 +2,8 @@
 
 Task Tracker, Memory and Orchestration System for AI agents.
 
+Inspired by `bead` and `ticket` - but this has different goals compared to both.
+
 ## Documentation
 
 - **Quickstart** - Get started quickly with [docs/quickstart.md](docs/quickstart.md)
