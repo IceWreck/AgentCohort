@@ -4,8 +4,10 @@ import typer
 
 from agentcohort.config import Config
 from agentcohort.logger import get_logger, setup_logging
+from agentcohort.task_cli import task_app
 
 app = typer.Typer()
+app.add_typer(task_app, name="task", help="task tracking and management")
 logger = get_logger(__name__)
 
 
