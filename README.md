@@ -6,6 +6,11 @@ Task Tracker, Memory and Orchestration System for AI agents.
 
 AgentCohort is a comprehensive system designed to manage AI agents with task tracking, memory management, and orchestration capabilities.
 
+## Documentation
+
+- **Quickstart** - Get started quickly with [docs/quickstart.md](docs/quickstart.md)
+- **Reference** - Full command reference in [docs/reference.md](docs/reference.md)
+
 ## Development
 
 ### Setup
