@@ -8,7 +8,7 @@ import typer
 from agentcohort.config import Config
 from agentcohort.task.id_generator import TaskIdGenerator
 from agentcohort.task.models import TaskStatus, TaskType
-from agentcohort.task.repository import MarkdownTaskRepository
+from agentcohort.task.repository import DirectoryTaskRepository
 from agentcohort.task.services import DependencyService, LinkService, QueryService, TaskService
 
 task_app = typer.Typer(no_args_is_help=True)
@@ -17,7 +17,7 @@ task_app = typer.Typer(no_args_is_help=True)
 def get_services():
     """Initialize and return all required services."""
     config = Config.from_env()
-    repo = MarkdownTaskRepository(config.tasks_dir)
+    repo = DirectoryTaskRepository(config.tasks_dir)
     id_gen = TaskIdGenerator(Path.cwd())
     task_service = TaskService(repo, id_gen)
     dep_service = DependencyService(repo)
@@ -215,10 +215,10 @@ def show(task_id: str) -> None:
 
 @task_app.command()
 def edit(task_id: str) -> None:
-    """Open a task's markdown file in your default editor."""
+    """Open a task's description file in your default editor."""
     task_service, _, _, _, config = get_services()
     task = task_service.get_task(task_id)
-    file_path = config.tasks_dir / f"{task.id}.md"
+    file_path = config.tasks_dir / task.id / "description.md"
     editor = os.environ.get("EDITOR", "vi")
     subprocess.run([editor, str(file_path)])
 

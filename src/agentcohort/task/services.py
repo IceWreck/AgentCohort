@@ -2,7 +2,7 @@ from datetime import UTC, datetime
 
 from agentcohort.task.exceptions import CircularDependencyError, TaskNotFoundError
 from agentcohort.task.id_generator import TaskIdGenerator
-from agentcohort.task.models import Note, Task, TaskStatus, TaskType
+from agentcohort.task.models import Task, TaskStatus, TaskType
 from agentcohort.task.repository import TaskRepository
 from agentcohort.task.utils import TreeVisualizer
 
@@ -86,11 +86,8 @@ class TaskService:
         return self.repository.find_recently_closed(limit)
 
     def add_note(self, task_id: str, note_content: str) -> Task:
-        task = self.repository.find_by_partial_id(task_id)
-        timestamp = datetime.now(UTC).isoformat()
-        note = Note(timestamp=timestamp, content=note_content)
-        task.notes.append(note)
-        return self.repository.update(task)
+        resolved_task_id = self.repository.find_by_partial_id(task_id).id
+        return self.repository.add_note_to_task(resolved_task_id, note_content)
 
 
 class DependencyService:

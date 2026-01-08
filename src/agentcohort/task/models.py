@@ -43,8 +43,9 @@ class TaskBase(BaseModel):
         return v
 
 
-class TaskFrontmatter(TaskBase):
-    pass
+class TaskMetadata(TaskBase):
+    title: str
+    files: list[str] = Field(default_factory=list)
 
 
 class Task(TaskBase):
