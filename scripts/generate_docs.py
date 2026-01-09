@@ -23,7 +23,10 @@ def generate_help_output(command_args: list[str] | None = None) -> str:
 
 def main() -> None:
     """Generate CLI documentation."""
-    docs: list[str] = ["# AgentCohort CLI Documentation\n", "This document contains the help text for all CLI commands.\n"]
+    docs: list[str] = [
+        "# AgentCohort CLI Documentation\n",
+        "This document contains the help text for all CLI commands.\n",
+    ]
 
     commands: list[list[str]] = [
         [],
@@ -38,7 +41,6 @@ def main() -> None:
         ["task", "blocked"],
         ["task", "closed"],
         ["task", "show"],
-        ["task", "edit"],
         ["task", "add-note"],
         ["task", "query"],
         ["task", "dep-add"],

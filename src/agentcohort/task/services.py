@@ -85,7 +85,7 @@ class TaskService:
     def get_recently_closed_tasks(self, limit: int = 20) -> list[Task]:
         return self.repository.find_recently_closed(limit)
 
-    def add_note(self, task_id: str, note_content: str) -> Task:
+    def add_note(self, task_id: str, note_content: str) -> tuple[Task, str]:
         resolved_task_id = self.repository.find_by_partial_id(task_id).id
         return self.repository.add_note_to_task(resolved_task_id, note_content)
 

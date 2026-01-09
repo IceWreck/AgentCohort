@@ -55,7 +55,7 @@ class TaskRepository(ABC):
         pass
 
     @abstractmethod
-    def add_note_to_task(self, task_id: str, note_content: str) -> Task:
+    def add_note_to_task(self, task_id: str, note_content: str) -> tuple[Task, str]:
         pass
 
 
@@ -133,7 +133,7 @@ class DirectoryTaskRepository(TaskRepository):
             external_ref=task.external_ref,
             parent=task.parent,
             title=task.title,
-            files=files
+            files=files,
         )
         self._write_metadata(task_dir, metadata)
 
@@ -169,7 +169,7 @@ class DirectoryTaskRepository(TaskRepository):
             description=description,
             design=design,
             acceptance=acceptance,
-            notes=notes
+            notes=notes,
         )
 
     def find_by_partial_id(self, partial_id: str) -> Task:
@@ -199,8 +199,7 @@ class DirectoryTaskRepository(TaskRepository):
                 result.append(task)
                 continue
             all_closed = all(
-                dep_id in all_tasks and all_tasks[dep_id].status == TaskStatus.CLOSED
-                for dep_id in task.deps
+                dep_id in all_tasks and all_tasks[dep_id].status == TaskStatus.CLOSED for dep_id in task.deps
             )
             if all_closed:
                 result.append(task)
@@ -215,8 +214,7 @@ class DirectoryTaskRepository(TaskRepository):
             if not task.deps:
                 continue
             has_unclosed = any(
-                dep_id not in all_tasks or all_tasks[dep_id].status != TaskStatus.CLOSED
-                for dep_id in task.deps
+                dep_id not in all_tasks or all_tasks[dep_id].status != TaskStatus.CLOSED for dep_id in task.deps
             )
             if has_unclosed:
                 result.append(task)
@@ -282,7 +280,7 @@ class DirectoryTaskRepository(TaskRepository):
     def get_all_ids(self) -> list[str]:
         return [task_dir.name for task_dir in self._get_all_task_dirs()]
 
-    def add_note_to_task(self, task_id: str, note_content: str) -> Task:
+    def add_note_to_task(self, task_id: str, note_content: str) -> tuple[Task, str]:
         from datetime import UTC
 
         task_dir = self._get_task_dir(task_id)
@@ -299,4 +297,5 @@ class DirectoryTaskRepository(TaskRepository):
             metadata.files.append(note_filename)
             self._write_metadata(task_dir, metadata)
 
-        return self.get(task_id)
+        updated_task = self.get(task_id)
+        return updated_task, note_filename

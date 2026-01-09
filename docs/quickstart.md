@@ -21,10 +21,15 @@ uvx git+https://github.com/IceWreck/AgentCohort.git task agentcohort task close 
 
 **Create tasks**
 ```bash
-agentcohort task create "Title" [-d description] [-p priority] [-t type]
+agentcohort task create "Title" [-p priority] [-t type]
 # Types: bug, feature, task, epic, chore
 # Priority: 0-4 (0=highest)
 ```
+
+After creating a task, you can edit the markdown files:
+- description.md - Task description
+- design.md - Design details
+- acceptance.md - Acceptance criteria
 
 **List & filter**
 ```bash
@@ -38,7 +43,6 @@ agentcohort task closed               # Recently closed
 **View details**
 ```bash
 agentcohort task show <task_id>       # Full details
-agentcohort task edit <task_id>       # Open markdown editor
 ```
 
 **Task lifecycle**
@@ -51,7 +55,7 @@ agentcohort task status <task_id> <new_status>
 
 **Notes**
 ```bash
-agentcohort task add-note <task_id> "Note text"
+agentcohort task add-note <task_id>  # Creates a new note file
 ```
 
 ## Dependencies

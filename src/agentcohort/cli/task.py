@@ -1,6 +1,4 @@
 import json
-import os
-import subprocess
 from pathlib import Path
 
 import typer
@@ -29,9 +27,6 @@ def get_services():
 @task_app.command()
 def create(
     title: str,
-    description: str = typer.Option(None, "-d", "--description", help="Task description."),
-    design: str = typer.Option(None, "--design", help="Task design."),
-    acceptance: str = typer.Option(None, "--acceptance", help="Acceptance criteria."),
     type: TaskType = typer.Option(TaskType.TASK, "-t", "--type", help="Task type."),
     priority: int = typer.Option(2, "-p", "--priority", help="Task priority (0-4, 0=highest)."),
     assignee: str = typer.Option(None, "-a", "--assignee", help="Task assignee."),
@@ -39,19 +34,24 @@ def create(
     parent: str = typer.Option(None, "--parent", help="Parent task id."),
 ) -> None:
     """Create a new task with the specified properties."""
-    task_service, _, _, _, _ = get_services()
+    task_service, _, _, _, config = get_services()
     task = task_service.create_task(
         title,
-        description,
-        design,
-        acceptance,
+        None,
+        None,
+        None,
         type,
         priority,
         assignee,
         external_ref,
         parent,
     )
-    typer.echo(task.id)
+    typer.echo(f"Created task: {task.id}")
+    task_dir = (config.tasks_dir / task.id).resolve()
+    typer.echo("Edit task files at:")
+    typer.echo(f"  {task_dir / 'description.md'}")
+    typer.echo(f"  {task_dir / 'design.md'}")
+    typer.echo(f"  {task_dir / 'acceptance.md'}")
 
 
 @task_app.command()
@@ -113,9 +113,7 @@ def blocked() -> None:
     all_tasks = {t.id: t for t in task_service.list_tasks()}
     for task in tasks:
         blockers = [
-            dep_id
-            for dep_id in task.deps
-            if dep_id in all_tasks and all_tasks[dep_id].status != TaskStatus.CLOSED
+            dep_id for dep_id in task.deps if dep_id in all_tasks and all_tasks[dep_id].status != TaskStatus.CLOSED
         ]
         blockers_string = f"[{', '.join(blockers)}]" if blockers else "[]"
         typer.echo(f"{task.id:8s} [P{task.priority}][{task.status.value}] - {task.title} <- {blockers_string}")
@@ -214,24 +212,12 @@ def show(task_id: str) -> None:
 
 
 @task_app.command()
-def edit(task_id: str) -> None:
-    """Open a task's description file in your default editor."""
-    task_service, _, _, _, config = get_services()
-    task = task_service.get_task(task_id)
-    file_path = config.tasks_dir / task.id / "description.md"
-    editor = os.environ.get("EDITOR", "vi")
-    subprocess.run([editor, str(file_path)])
-
-
-@task_app.command()
-def add_note(task_id: str, note_text: str | None = typer.Argument(None)) -> None:
+def add_note(task_id: str) -> None:
     """Add a note to a task."""
-    if note_text is None:  # type: ignore[unreachable]
-        typer.echo("error: no note provided", err=True)
-        raise typer.Exit(1)
-    task_service, _, _, _, _ = get_services()
-    task = task_service.add_note(task_id, note_text)
-    typer.echo(f"Note added to {task.id}")
+    task_service, _, _, _, config = get_services()
+    task, note_filename = task_service.add_note(task_id, "")
+    note_path = (config.tasks_dir / task.id / note_filename).resolve()
+    typer.echo(f"Note created: {note_path}")
 
 
 @task_app.command()

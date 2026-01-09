@@ -25,9 +25,7 @@ class TreeVisualizer:
         output_lines: list[str] = []
         root = self.all_tasks[root_id]
         output_lines.append(f"{root.id} [{root.status.value}] {root.title}")
-        self._build_tree_lines(
-            root_id, max_depths, subtree_depths, output_lines, full_mode, "", "", set()
-        )
+        self._build_tree_lines(root_id, max_depths, subtree_depths, output_lines, full_mode, "", "", set())
         return "\n".join(output_lines)
 
     def _calculate_max_depths(self, root_id: str) -> dict[str, int]:

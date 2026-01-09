@@ -47,7 +47,6 @@ This document contains the help text for all CLI commands.
 │ closed       List recently closed tasks.                                     │
 │ show         Display detailed information about a task including related     │
 │              tasks.                                                          │
-│ edit         Open a task's markdown file in your default editor.             │
 │ add-note     Add a note to a task.                                           │
 │ query        Query tasks and export as JSON.                                 │
 │ dep-add      Add a dependency from task_id to dep_id.                        │
@@ -74,9 +73,6 @@ This document contains the help text for all CLI commands.
 │ *    title      TEXT  [required]                                             │
 ╰──────────────────────────────────────────────────────────────────────────────╯
 ╭─ Options ────────────────────────────────────────────────────────────────────╮
-│ --description   -d      TEXT                       Task description.         │
-│ --design                TEXT                       Task design.              │
-│ --acceptance            TEXT                       Acceptance criteria.      │
 │ --type          -t      [bug|feature|task|epic|ch  Task type.                │
 │                         ore]                       [default: task]           │
 │ --priority      -p      INTEGER                    Task priority (0-4,       │
@@ -247,35 +243,16 @@ This document contains the help text for all CLI commands.
 
 ```
 
-## `agentcohort task edit`
-
-```
-                                                                                
- Usage: agentcohort task edit [OPTIONS] TASK_ID                                 
-                                                                                
- Open a task's markdown file in your default editor.                            
-                                                                                
-╭─ Arguments ──────────────────────────────────────────────────────────────────╮
-│ *    task_id      TEXT  [required]                                           │
-╰──────────────────────────────────────────────────────────────────────────────╯
-╭─ Options ────────────────────────────────────────────────────────────────────╮
-│ --help          Show this message and exit.                                  │
-╰──────────────────────────────────────────────────────────────────────────────╯
-
-
-```
-
 ## `agentcohort task add-note`
 
 ```
                                                                                 
- Usage: agentcohort task add-note [OPTIONS] TASK_ID [NOTE_TEXT]                 
+ Usage: agentcohort task add-note [OPTIONS] TASK_ID                             
                                                                                 
  Add a note to a task.                                                          
                                                                                 
 ╭─ Arguments ──────────────────────────────────────────────────────────────────╮
-│ *    task_id        TEXT         [required]                                  │
-│      note_text      [NOTE_TEXT]                                              │
+│ *    task_id      TEXT  [required]                                           │
 ╰──────────────────────────────────────────────────────────────────────────────╯
 ╭─ Options ────────────────────────────────────────────────────────────────────╮
 │ --help          Show this message and exit.                                  │
