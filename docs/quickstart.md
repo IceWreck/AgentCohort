@@ -8,13 +8,13 @@ AgentCohort is a CLI tool for tracking and orchestrating tasks with dependencies
 uvx git+https://github.com/IceWreck/AgentCohort.git task --help
 
 # Create a task
-uvx git+https://github.com/IceWreck/AgentCohort.git task agentcohort task create "Fix login bug" -p 0
+uvx git+https://github.com/IceWreck/AgentCohort.git task create "Fix login bug" -p 0
 
 # Start working on it
-uvx git+https://github.com/IceWreck/AgentCohort.git task agentcohort task start <task_id>
+uvx git+https://github.com/IceWreck/AgentCohort.git task start <task_id>
 
 # Close when done
-uvx git+https://github.com/IceWreck/AgentCohort.git task agentcohort task close <task_id>
+uvx git+https://github.com/IceWreck/AgentCohort.git task close <task_id>
 ```
 
 ## Essential Commands
