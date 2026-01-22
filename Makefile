@@ -8,7 +8,6 @@ IMAGE_NAME = example.com/packages/agentcohort:latest
 .PHONY: *
 
 develop:
-	uv venv ./.venv
 	uv sync --all-extras
 	touch .env
 
