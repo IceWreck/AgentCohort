@@ -17,7 +17,8 @@ This document contains the help text for all CLI commands.
 │ --help                        Show this message and exit.                    │
 ╰──────────────────────────────────────────────────────────────────────────────╯
 ╭─ Commands ───────────────────────────────────────────────────────────────────╮
-│ task   Task tracking and management.                                         │
+│ task       Task tracking and management.                                     │
+│ worktree   Git worktree management.                                          │
 ╰──────────────────────────────────────────────────────────────────────────────╯
 
 
@@ -387,6 +388,85 @@ This document contains the help text for all CLI commands.
 ╰──────────────────────────────────────────────────────────────────────────────╯
 ╭─ Options ────────────────────────────────────────────────────────────────────╮
 │ --help          Show this message and exit.                                  │
+╰──────────────────────────────────────────────────────────────────────────────╯
+
+
+```
+
+## `agentcohort worktree`
+
+```
+                                                                                
+ Usage: agentcohort worktree [OPTIONS] COMMAND [ARGS]...                        
+                                                                                
+ Git worktree management.                                                       
+                                                                                
+╭─ Options ────────────────────────────────────────────────────────────────────╮
+│ --help          Show this message and exit.                                  │
+╰──────────────────────────────────────────────────────────────────────────────╯
+╭─ Commands ───────────────────────────────────────────────────────────────────╮
+│ create   Create a new worktree.                                              │
+│ ls       List all worktrees.                                                 │
+│ remove   Remove a worktree.                                                  │
+╰──────────────────────────────────────────────────────────────────────────────╯
+
+
+```
+
+## `agentcohort worktree create`
+
+```
+                                                                                
+ Usage: agentcohort worktree create [OPTIONS] NAME                              
+                                                                                
+ Create a new worktree.                                                         
+                                                                                
+╭─ Arguments ──────────────────────────────────────────────────────────────────╮
+│ *    name      TEXT  [required]                                              │
+╰──────────────────────────────────────────────────────────────────────────────╯
+╭─ Options ────────────────────────────────────────────────────────────────────╮
+│ --branch      -b      TEXT  Branch name (defaults to <name>).                │
+│ --base                TEXT  Base branch to create from (defaults to current  │
+│                             branch).                                         │
+│ --existing                  Use existing branch instead of creating new one. │
+│ --path                TEXT  Custom worktree path (defaults to                │
+│                             ../<repo-name>-<name>).                          │
+│ --post-setup          TEXT  Command to run after creation (e.g., "uv sync"). │
+│ --help                      Show this message and exit.                      │
+╰──────────────────────────────────────────────────────────────────────────────╯
+
+
+```
+
+## `agentcohort worktree ls`
+
+```
+                                                                                
+ Usage: agentcohort worktree ls [OPTIONS]                                       
+                                                                                
+ List all worktrees.                                                            
+                                                                                
+╭─ Options ────────────────────────────────────────────────────────────────────╮
+│ --help          Show this message and exit.                                  │
+╰──────────────────────────────────────────────────────────────────────────────╯
+
+
+```
+
+## `agentcohort worktree remove`
+
+```
+                                                                                
+ Usage: agentcohort worktree remove [OPTIONS] NAME                              
+                                                                                
+ Remove a worktree.                                                             
+                                                                                
+╭─ Arguments ──────────────────────────────────────────────────────────────────╮
+│ *    name      TEXT  [required]                                              │
+╰──────────────────────────────────────────────────────────────────────────────╯
+╭─ Options ────────────────────────────────────────────────────────────────────╮
+│ --force          Force removal even if worktree has changes.                 │
+│ --help           Show this message and exit.                                 │
 ╰──────────────────────────────────────────────────────────────────────────────╯
 
 

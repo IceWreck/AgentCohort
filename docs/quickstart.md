@@ -92,6 +92,25 @@ agentcohort task query '.[] | select(.status == "open")'
 agentcohort task query '.[] | .id'
 ```
 
+## Worktrees
+
+```bash
+# Create a new worktree for isolated development
+agentcohort worktree create feature-login -b feature/login
+
+# List all worktrees
+agentcohort worktree ls
+
+# Remove a worktree
+agentcohort worktree remove feature-login
+
+# Create from existing branch
+agentcohort worktree create hotfix --existing --base main
+
+# Run setup command after creation
+agentcohort worktree create task-123 --post-setup "uv sync"
+```
+
 ## Task IDs
 
 All commands use short task IDs (e.g., `a-864a`). Create a task to get its ID, or use `agentcohort task ls` to see all IDs.

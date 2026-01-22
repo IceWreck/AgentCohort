@@ -49,6 +49,10 @@ def main() -> None:
         ["task", "undep"],
         ["task", "link"],
         ["task", "unlink"],
+        ["worktree"],
+        ["worktree", "create"],
+        ["worktree", "ls"],
+        ["worktree", "remove"],
     ]
 
     for cmd_args in commands:
