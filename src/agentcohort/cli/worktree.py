@@ -2,6 +2,7 @@ from pathlib import Path
 
 import typer
 
+from agentcohort.config import Config
 from agentcohort.worktree.exceptions import WorktreeError
 from agentcohort.worktree.git import GitClient
 from agentcohort.worktree.services import WorktreeService
@@ -10,9 +11,10 @@ worktree_app = typer.Typer(no_args_is_help=True)
 
 
 def get_service() -> WorktreeService:
-    """Initialize and return WorktreeService with GitClient."""
+    """Initialize and return WorktreeService with GitClient and Config."""
     git_client = GitClient()
-    return WorktreeService(git_client)
+    config = Config.from_env()
+    return WorktreeService(git_client, config)
 
 
 @worktree_app.command()

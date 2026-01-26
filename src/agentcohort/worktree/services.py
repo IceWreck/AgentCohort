@@ -1,6 +1,8 @@
+import contextlib
 import subprocess
 from pathlib import Path
 
+from agentcohort.config import Config
 from agentcohort.worktree.exceptions import WorktreeNotFoundError
 from agentcohort.worktree.git import GitClient
 from agentcohort.worktree.models import WorktreeCreateResult, WorktreeInfo
@@ -9,13 +11,15 @@ from agentcohort.worktree.models import WorktreeCreateResult, WorktreeInfo
 class WorktreeService:
     """Service for managing git worktrees."""
 
-    def __init__(self, git_client: GitClient):
-        """Initialize WorktreeService with a GitClient.
+    def __init__(self, git_client: GitClient, config: Config):
+        """Initialize WorktreeService with a GitClient and Config.
 
         Args:
             git_client: GitClient instance for executing git operations
+            config: Config instance for accessing configuration
         """
         self.git = git_client
+        self.config = config
 
     def create_worktree(
         self,
@@ -69,6 +73,9 @@ class WorktreeService:
             base=base if not existing else None,
         )
 
+        # Symlink agentcohort_store from main repo if it exists
+        self._symlink_agentcohort_store(path)
+
         # Run post-setup command if provided
         post_setup_output = None
         if post_setup:
@@ -80,6 +87,26 @@ class WorktreeService:
             created_new_branch=not existing,
             post_setup_output=post_setup_output,
         )
+
+    def _symlink_agentcohort_store(self, worktree_path: Path) -> None:
+        """Symlink the main repo's agentcohort_store into the worktree.
+
+        Args:
+            worktree_path: Path to the newly created worktree
+        """
+        store_name = self.config.agentcohort_store
+
+        worktrees = self.git.worktree_list()
+        if not worktrees:
+            return
+
+        main_repo_path = worktrees[0].path
+        main_store_path = main_repo_path / store_name
+        new_store_path = worktree_path / store_name
+
+        if main_store_path.exists() and not new_store_path.exists():
+            with contextlib.suppress(OSError):
+                new_store_path.symlink_to(main_store_path)
 
     def list_worktrees(self) -> list[WorktreeInfo]:
         """List all worktrees in the repository.
