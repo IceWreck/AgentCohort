@@ -23,4 +23,8 @@ typecheck:
 
 build:
 	uv export --format requirements.txt --no-emit-project --no-hashes -o requirements.txt
+	uv build
 	podman build -t $(IMAGE_NAME) .
+
+publish: build
+	uv publish
