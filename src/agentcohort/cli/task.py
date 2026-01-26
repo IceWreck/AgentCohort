@@ -16,7 +16,7 @@ def get_services():
     """Initialize and return all required services."""
     config = Config.from_env()
     git_client = GitClient()
-    base_path = git_client.get_repo_root()
+    base_path = git_client.repo_root
     resolved_tasks_dir = git_client.resolve_path(config.tasks_dir)
     repo = DirectoryTaskRepository(resolved_tasks_dir)
     id_gen = TaskIdGenerator(base_path)

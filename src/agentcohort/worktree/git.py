@@ -44,6 +44,7 @@ class GitClient:
         except subprocess.CalledProcessError as e:
             raise GitCommandError(f"Git command failed: {e.stderr if capture_output else str(e)}") from e
 
+    @property
     def is_git_repo(self) -> bool:
         """Check if the current directory is a git repository.
 
@@ -56,7 +57,8 @@ class GitClient:
         except GitCommandError:
             return False
 
-    def get_repo_root(self) -> Path:
+    @property
+    def repo_root(self) -> Path:
         """Get the root path of the git repository.
 
         Returns:
@@ -65,13 +67,14 @@ class GitClient:
         Raises:
             NotInGitRepoError: If not in a git repository
         """
-        if not self.is_git_repo():
+        if not self.is_git_repo:
             raise NotInGitRepoError("Not in a git repository")
 
         result = self._run("rev-parse", "--show-toplevel", capture_output=True)
         return Path(result.stdout.strip())
 
-    def get_repo_name(self) -> str:
+    @property
+    def repo_name(self) -> str:
         """Get the name of the git repository.
 
         Returns:
@@ -80,8 +83,7 @@ class GitClient:
         Raises:
             NotInGitRepoError: If not in a git repository
         """
-        repo_root = self.get_repo_root()
-        return repo_root.name.lower()
+        return self.repo_root.name.lower()
 
     def resolve_path(self, relative_path: Path) -> Path:
         """Resolve a relative path against the repository root.
@@ -95,8 +97,7 @@ class GitClient:
         Raises:
             NotInGitRepoError: If not in a git repository
         """
-        repo_root = self.get_repo_root()
-        return repo_root / relative_path
+        return self.repo_root / relative_path
 
     @property
     def current_branch(self) -> str:
@@ -109,11 +110,31 @@ class GitClient:
             NotInGitRepoError: If not in a git repository
             GitCommandError: If unable to determine current branch
         """
-        if not self.is_git_repo():
+        if not self.is_git_repo:
             raise NotInGitRepoError("Not in a git repository")
 
         result = self._run("rev-parse", "--abbrev-ref", "HEAD", capture_output=True)
         return result.stdout.strip()
+
+    @property
+    def default_branch(self) -> str:
+        """Get the default branch from upstream.
+
+        Returns:
+            Default branch name (e.g., 'main', 'master')
+
+        Raises:
+            NotInGitRepoError: If not in a git repository
+            GitCommandError: If unable to determine default branch
+        """
+        if not self.is_git_repo:
+            raise NotInGitRepoError("Not in a git repository")
+
+        try:
+            result = self._run("symbolic-ref", "refs/remotes/origin/HEAD", capture_output=True)
+            return result.stdout.strip().split("/")[-1]
+        except GitCommandError:
+            return "main"
 
     def branch_exists(self, branch: str) -> bool:
         """Check if a branch exists locally.
@@ -172,7 +193,7 @@ class GitClient:
         Raises:
             NotInGitRepoError: If not in a git repository
         """
-        if not self.is_git_repo():
+        if not self.is_git_repo:
             raise NotInGitRepoError("Not in a git repository")
 
         result = self._run("worktree", "list", "--porcelain", capture_output=True)
