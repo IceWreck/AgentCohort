@@ -21,7 +21,7 @@ def get_service() -> WorktreeService:
 def create(
     name: str,
     branch: str = typer.Option(None, "-b", "--branch", help="Branch name (defaults to <name>)."),
-    base: str = typer.Option(None, "--base", help="Base branch to create from (defaults to current branch)."),
+    base: str = typer.Option(None, "--base", help="Base branch to create from (defaults to upstream default branch)."),
     existing: bool = typer.Option(False, "--existing", help="Use existing branch instead of creating new one."),
     path: str = typer.Option(None, "--path", help="Custom worktree path (defaults to ../<repo-name>-<name>)."),
     post_setup: str = typer.Option(None, "--post-setup", help='Command to run after creation (e.g., "uv sync").'),

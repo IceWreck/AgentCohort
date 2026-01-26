@@ -426,8 +426,8 @@ This document contains the help text for all CLI commands.
 ╰──────────────────────────────────────────────────────────────────────────────╯
 ╭─ Options ────────────────────────────────────────────────────────────────────╮
 │ --branch      -b      TEXT  Branch name (defaults to <name>).                │
-│ --base                TEXT  Base branch to create from (defaults to current  │
-│                             branch).                                         │
+│ --base                TEXT  Base branch to create from (defaults to upstream │
+│                             default branch).                                 │
 │ --existing                  Use existing branch instead of creating new one. │
 │ --path                TEXT  Custom worktree path (defaults to                │
 │                             ../<repo-name>-<name>).                          │
