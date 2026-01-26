@@ -94,7 +94,7 @@ class WorktreeService:
         Args:
             worktree_path: Path to the newly created worktree
         """
-        store_name = self.config.agentcohort_store
+        store_name = self.config.agentcohort_store.name
 
         worktrees = self.git.worktree_list()
         if not worktrees:

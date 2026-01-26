@@ -12,7 +12,7 @@ logger = get_logger(__name__)
 class Config(BaseSettings):
     model_config = SettingsConfigDict(env_prefix="AGENTCOHORT_")
 
-    agentcohort_store: Path = Field(default=Path(".agentcohort"))
+    agentcohort_store: Path = Field(default=Path(".agentcohort"))  # this should be a relative path at repo root
     tasks_dir: Path = Field(default=Path(".agentcohort/tasks"))
 
     @classmethod

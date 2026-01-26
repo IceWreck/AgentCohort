@@ -1,5 +1,4 @@
 import json
-from pathlib import Path
 
 import typer
 
@@ -8,6 +7,7 @@ from agentcohort.task.id_generator import TaskIdGenerator
 from agentcohort.task.models import TaskStatus, TaskType
 from agentcohort.task.repository import DirectoryTaskRepository
 from agentcohort.task.services import DependencyService, LinkService, QueryService, TaskService
+from agentcohort.worktree.git import GitClient
 
 task_app = typer.Typer(no_args_is_help=True)
 
@@ -15,12 +15,16 @@ task_app = typer.Typer(no_args_is_help=True)
 def get_services():
     """Initialize and return all required services."""
     config = Config.from_env()
-    repo = DirectoryTaskRepository(config.tasks_dir)
-    id_gen = TaskIdGenerator(Path.cwd())
+    git_client = GitClient()
+    base_path = git_client.get_repo_root()
+    resolved_tasks_dir = git_client.resolve_path(config.tasks_dir)
+    repo = DirectoryTaskRepository(resolved_tasks_dir)
+    id_gen = TaskIdGenerator(base_path)
     task_service = TaskService(repo, id_gen)
     dep_service = DependencyService(repo)
     link_service = LinkService(repo)
     query_service = QueryService(repo)
+    config.tasks_dir = resolved_tasks_dir
     return task_service, dep_service, link_service, query_service, config
 
 

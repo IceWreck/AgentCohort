@@ -83,6 +83,21 @@ class GitClient:
         repo_root = self.get_repo_root()
         return repo_root.name.lower()
 
+    def resolve_path(self, relative_path: Path) -> Path:
+        """Resolve a relative path against the repository root.
+
+        Args:
+            relative_path: Relative path to resolve
+
+        Returns:
+            Absolute path resolved against the repository root
+
+        Raises:
+            NotInGitRepoError: If not in a git repository
+        """
+        repo_root = self.get_repo_root()
+        return repo_root / relative_path
+
     @property
     def current_branch(self) -> str:
         """Get the name of the current branch.
