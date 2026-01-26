@@ -55,15 +55,15 @@ class WorktreeService:
 
         # Determine worktree path
         if path is None:
-            repo_root = self.git.get_repo_root()
-            repo_name = self.git.get_repo_name()
+            repo_root = self.git.repo_root
+            repo_name = self.git.repo_name
             path = repo_root.parent / f"{repo_name}-{name}"
         else:
             path = path.resolve()
 
         # Determine base branch (only used when creating new branch)
         if base is None and not existing:
-            base = self.git.current_branch
+            base = self.git.default_branch
 
         # Create the worktree
         self.git.worktree_add(
@@ -159,7 +159,7 @@ class WorktreeService:
 
         # If still not found, try with repo prefix applied
         if target_path is None:
-            repo_name = self.git.get_repo_name()
+            repo_name = self.git.repo_name
             prefixed_name = f"{repo_name}-{name}"
             for wt in worktrees:
                 if wt.path.name == prefixed_name:
